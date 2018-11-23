@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/text_home" />
+    <item android:title="@string/text_training">
+        <menu>
+            <item
+                android:id="@+id/nav_active_invitations"
+                android:icon="@drawable/ic_menu_mail"
+                android:title="@string/text_active_invitations_large" />
+            <item
+                android:id="@+id/nav_scheduler_activities"
+                android:icon="@drawable/ic_menu_program"
+                android:title="@string/text_scheduler_activities_large" />
+
+            <item
+                android:id="@+id/nav_check_in"
+                android:icon="@drawable/ic_menu_time"
+                android:title="@string/text_assists_score_large" />
+            <item
+                android:id="@+id/nav_evaluations"
+                android:icon="@drawable/ic_menu_burger"
+                android:title="@string/text_active_evaluations_large" />
+            <item
+                android:id="@+id/nav_poll"
+                android:icon="@drawable/ic_menu_back"
+                android:title="@string/text_active_polls_large" />
+        </menu>
+    </item>
+    <item android:title="@string/text_resources">
+        <menu>
+            <item
+                android:id="@+id/nav_drive"
+                android:icon="@drawable/ic_menu_drive"
+                android:title="@string/text_drive" />
+            <item
+                android:id="@+id/nav_calendar"
+                android:icon="@drawable/ic_menu_cal"
+                android:title="@string/text_calendar" />
+        </menu>
+    </item>
+    <item android:title="@string/text_communities">
+        <menu>
+            <item
+                android:id="@+id/nav_google_plus"
+                android:icon="@drawable/ic_menu_google"
+                android:title="@string/text_google_plus" />
+            <item
+                android:id="@+id/nav_campus_bbva"
+                android:icon="@drawable/ic_menu_formation"
+                android:title="@string/text_campus_bbva" />
+        </menu>
+    </item>
+    <item android:title="@string/text_sign_out">
+        <menu>
+            <item
+                android:id="@+id/nav_sign_out"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/text_sign_out" />
+        </menu>
+
+    </item>
+</menu>

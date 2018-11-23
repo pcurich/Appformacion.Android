@@ -1,0 +1,99 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="fragments.ScoreFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="25dp">
+
+        <com.jcodee.bbva.formacion.view.views.TextViewBoldCustom
+            android:id="@+id/tvTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RESULTADO"
+            android:textColor="#055d99"
+            android:textSize="20sp" />
+
+        <com.jcodee.bbva.formacion.view.views.TextViewMediumCustom
+            android:id="@+id/tvCurso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RIESGOS FINANCIEROS"
+            android:textColor="#3ebbe6"
+            android:textSize="18sp" />
+
+        <com.jcodee.bbva.formacion.view.views.TextViewMediumCustom
+            android:id="@+id/tvPersona"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ing. Susana Guerra"
+            android:textColor="#3ebbe6"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <include layout="@layout/divisor" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_gravity="center_horizontal" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <com.jcodee.bbva.formacion.view.views.TextViewBoldCustom
+                        android:id="@+id/tvScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textSize="34sp" />
+
+                    <com.jcodee.bbva.formacion.view.views.TextViewCustom
+                        android:id="@+id/tvRespuestas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <com.jcodee.bbva.formacion.view.views.ButtonCustom
+                android:id="@+id/btnFinish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25dp"
+                android:background="@color/sky_blue"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/text_finalize"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
