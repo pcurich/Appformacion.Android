@@ -1,0 +1,117 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/llContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/llFooter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/llData"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".5"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/lineaSuperior"
+                layout="@layout/divisor"
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <com.qubicgo.android.appformacion.custom.TextViewBoldCustom
+                        android:id="@+id/tvScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textSize="25sp" />
+
+                    <com.qubicgo.android.appformacion.custom.TextViewCustom
+                        android:id="@+id/tvRespuestas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <include
+                android:id="@+id/lineaInferior"
+                layout="@layout/divisor"
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llResponse"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".5"
+            android:background="@drawable/gradient"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvResponse"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llFooter"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="@color/blue"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llContainer"
+        app:layout_constraintVertical_bias="1.0">
+
+        <com.qubicgo.android.appformacion.custom.TextViewBoldCustom
+            android:id="@+id/tvNext"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right|center"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:text="@string/text_end"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

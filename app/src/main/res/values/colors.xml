@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/blue</color>
+    <color name="colorPrimaryDark">@android:color/black</color>
+    <color name="colorAccent">@color/sky_blue</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="blue">#004286</color>
+    <color name="sky_blue">#30CEC3</color>
+
+    <color name="divisor_1">#30CEC3</color>
+    <color name="divisor_2">#05356b</color>
+    <color name="divisor_3">#0C56A8</color>
+    <color name="divisor_4">#219EDD</color>
+    <color name="divisor_5">#7ec5e9</color>
+
+    <color name="divider">#0e5586</color>
+    <color name="color_home">#8ad6f6</color>
+
+    <color name="color_invitation_pair">#229FD7</color>
+    <color name="color_invitation_no_pair">#30CEC3</color>
+
+    <color name="calendar_days">#0B529A</color>
+    <color name="month_days">#41B8E9</color>
+    <color name="transparent">#70000000</color>
+
+    <color name="gray">#808080</color>
+
+    <color name="custom_darkred">#8B0000</color>
+    <color name="custom_darkgreen">#006400</color>
+</resources>

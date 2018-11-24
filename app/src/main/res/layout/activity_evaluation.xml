@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/llContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".activities.EvaluationActivity">
+
+        <LinearLayout
+            android:id="@+id/llData"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".5"
+            android:background="@color/color_home"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/include"
+                layout="@layout/divisor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.qubicgo.android.appformacion.custom.TextViewJustifiedCustom
+                android:id="@+id/tvQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_vertical|right"
+                android:layout_margin="10dp"
+                android:background="@color/white"
+                android:paddingBottom="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="20dp"
+                android:text="TextView"
+                android:textSize="15sp" />
+
+            <include
+                android:id="@+id/include"
+                layout="@layout/divisor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llResponse"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".5"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerAlternative"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient">
+
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.qubicgo.android.appformacion.custom.TextViewBoldCustom
+            android:id="@+id/tvPrevious"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="left|center"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:text="@string/text_previous"
+            android:textColor="@color/white" />
+
+        <com.qubicgo.android.appformacion.custom.TextViewBoldCustom
+            android:id="@+id/tvNext"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="right|center"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:text="@string/text_next"
+            android:textColor="@color/white" />
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
