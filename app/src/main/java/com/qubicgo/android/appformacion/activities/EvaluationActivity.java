@@ -31,6 +31,7 @@ import com.qubicgo.android.appformacion.data.response.EvaluationResponse;
 import com.qubicgo.android.appformacion.services.def.IServiceEvaluation;
 import com.qubicgo.android.appformacion.services.implementation.ServiceFactoryEvaluation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -184,7 +185,11 @@ public class EvaluationActivity extends AppCompatActivity {
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra("result_evaluation_aspect", aspect);
+
+                                intent.putExtra("result_evaluation_porcentage" ,aspect.getPercentage());
+                                intent.putExtra("result_evaluation_good", (Serializable)getGoodAnswer());
+                                intent.putExtra("result_evaluation_bad",(Serializable)getBadAnswer());
+
                                 startActivity(intent);
                             }
 
@@ -211,6 +216,126 @@ public class EvaluationActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest> getBadAnswer() {
+
+        List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest> bad = new ArrayList<>();
+
+        for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest q : aspect.getQuestions()) {
+            List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest> alternative = new ArrayList<>();
+
+            if ("OPC_SIM".equals(q.getCodeQuestion())) {
+                for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest r : q.getAlternatives()) {
+                    if ("RPTA_COR".equals(r.getCodeAlternative()) && !r.isSelected()) {
+                        alternative.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(r.getAlternativeId(), r.getDescription() + " (Correcto)", r.getCodeAlternative()));
+                    }
+                    if ("RPTA_INC".equals(r.getCodeAlternative()) && r.isSelected()) {
+                        alternative.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(r.getAlternativeId(), r.getDescription() + " (Error)", r.getCodeAlternative()));
+                    }
+                }
+                if (alternative.size() > 0) {
+                    bad.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest(q.getQuestionId(), q.getOrden(), q.getQuestion(), q.getCodeQuestion(), alternative));
+                    alternative.clear();
+                    alternative = new ArrayList<>();
+                }
+            } else {
+                List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest> temp = getCorrectAnswer(q);
+                for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest r : temp) {
+                    if ("RPTA_COR".equals(r.getCodeAlternative()) && r.isSelected()) {
+                        alternative.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(r.getAlternativeId(), r.getDescription() + " (Seleccionado)", r.getCodeAlternative()));
+                    } else if ("RPTA_COR".equals(r.getCodeAlternative()) && r.isSelected()) {
+                        alternative.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(r.getAlternativeId(), r.getDescription() + " (No Seleccionado)", r.getCodeAlternative()));
+                    }
+                    else{
+                        alternative.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(r.getAlternativeId(), r.getDescription() + " (No Seleccionado)", "RPTA_INC"));
+                    }
+                }
+                for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest r : q.getAlternatives()) {
+                    if ("RPTA_INC".equals(r.getCodeAlternative()) && r.isSelected()) {
+                        alternative.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(r.getAlternativeId(), r.getDescription() + " (Error)", r.getCodeAlternative()));
+                    }
+                }
+                if(temp.size() <= alternative.size()) {
+                    bad.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest(q.getQuestionId(), q.getOrden(), q.getQuestion(), q.getCodeQuestion(), alternative));
+                }
+            }
+
+        }
+        return bad;
+    }
+
+    private List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest> getGoodAnswer() {
+
+        List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest> good = new ArrayList<>();
+        List<Integer> listToMarkToDelete = new ArrayList<>();
+
+        for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest q : aspect.getQuestions()) {
+            List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest> alternative = new ArrayList<>();
+
+            if ("OPC_SIM".equals(q.getCodeQuestion())) {
+                for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest r : q.getAlternatives()) {
+                    if ("RPTA_COR".equals(r.getCodeAlternative()) && r.isSelected()) {
+                        alternative.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(r.getAlternativeId(), r.getDescription() + " (Correcto)", r.getCodeAlternative()));
+                        good.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest(q.getQuestionId(),q.getOrden(),q.getQuestion(),q.getCodeQuestion(),alternative));
+                        listToMarkToDelete.add(q.getQuestionId());
+                    }
+                }
+            } else {
+                List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest> temp = getCorrectAnswer(q);
+
+                for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest r : temp) {
+                    if ("RPTA_COR".equals(r.getCodeAlternative()) && r.isSelected()) {
+                        alternative.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(r.getAlternativeId(), r.getDescription() + " (Correcto)", r.getCodeAlternative()));
+                    }
+                }
+
+                if (alternative.size()>1){
+
+                for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest r : q.getAlternatives()) {
+                    if ("RPTA_INC".equals(r.getCodeAlternative()) && r.isSelected()) {
+                        alternative.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(r.getAlternativeId(), r.getDescription() + " (Correcto)", r.getCodeAlternative()));
+                    }
+                }
+            }
+
+                if(temp.size() == alternative.size()) {
+                    listToMarkToDelete.add(q.getQuestionId());
+                    good.add(new EvaluationActiveRequest.EvaluationRequest.QuestionRequest(q.getQuestionId(), q.getOrden(), q.getQuestion(), q.getCodeQuestion(), alternative));
+                }
+            }
+            alternative = new ArrayList<>();
+        }
+
+        for (Integer i : listToMarkToDelete) {
+            EvaluationActiveRequest.EvaluationRequest.QuestionRequest  toDelete = returnQuestion(i);
+            if(toDelete!= null){
+                aspect.getQuestions().remove(toDelete);
+            }
+        }
+
+        return good;
+    }
+
+    private EvaluationActiveRequest.EvaluationRequest.QuestionRequest  returnQuestion(int id){
+        for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest q : aspect.getQuestions()){
+            if(q.getQuestionId() == id){
+                return q;
+            }
+        }
+        return null;
+    }
+
+
+    private List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest>  getCorrectAnswer(EvaluationActiveRequest.EvaluationRequest.QuestionRequest q) {
+        List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest>  alternative = new ArrayList<>();
+
+        for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest r :  q.getAlternatives()){
+            if ("RPTA_COR".equals( r.getCodeAlternative())){
+                alternative.add(r);
+            }
+        }
+        return alternative;
     }
 
     private void CreateResponse() {

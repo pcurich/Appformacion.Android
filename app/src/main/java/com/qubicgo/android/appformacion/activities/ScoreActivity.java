@@ -1,6 +1,5 @@
 package com.qubicgo.android.appformacion.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -37,7 +36,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
@@ -56,8 +54,10 @@ public class ScoreActivity extends AppCompatActivity {
     @BindView(R.id.rvResponse)
     RecyclerView rvResponse;
 
-    private EvaluationActiveRequest.EvaluationRequest aspect;
     private List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest> filterQuestion;
+    private List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest> goodResult;
+    private List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest> badResult;
+
     private Context mContext;
     SectionedRecyclerViewAdapter sectionAdapter;
 
@@ -72,16 +72,18 @@ public class ScoreActivity extends AppCompatActivity {
         mContext = this;
 
         filterQuestion = new ArrayList<>();
-        aspect = (EvaluationActiveRequest.EvaluationRequest) getIntent().getSerializableExtra("result_evaluation_aspect");
+        Integer  porcentage =  getIntent().getIntExtra("result_evaluation_porcentage",0);
+        goodResult = (List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest> ) getIntent().getSerializableExtra("result_evaluation_good");
+        badResult =  (List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest> ) getIntent().getSerializableExtra("result_evaluation_bad");
         sectionAdapter = new SectionedRecyclerViewAdapter();
 
-        int good = getCorrect();
-        int bad = aspect.getQuestions().size() - getCorrect();
+        int good = goodResult.size();
+        int bad =  badResult.size();
         loadChart(bad, good);
         NumberFormat format = NumberFormat.getPercentInstance(Locale.US);
         String percentage = format.format((good * 1.0 / (bad + good)));
         tvScore.setText(percentage);
-        tvRespuestas.setText(aspect.getPercentage() <= (good * 100 / (bad + good)) ? "Aprobado" : "Desaprobado");
+        tvRespuestas.setText(porcentage  <= (good * 100 / (bad + good)) ? "Aprobado" : "Desaprobado");
 
     }
 
@@ -107,7 +109,6 @@ public class ScoreActivity extends AppCompatActivity {
         dataset.setValueTextColors(listColor);
         dataset.setColors(getResources().getColor(R.color.sky_blue), getResources().getColor(R.color.blue));
 
-
         dataset.setDrawIcons(true);
         dataset.setSliceSpace(1f);
         dataset.setIconsOffset(new MPPointF(0, 40));
@@ -121,42 +122,11 @@ public class ScoreActivity extends AppCompatActivity {
         data.setValueTextColor(Color.WHITE);
         data.setHighlightEnabled(true);
 
-
         pieChart.setData(data);
         pieChart.setUsePercentValues(false);
         pieChart.setDrawEntryLabels(true);
     }
 
-    private int getCorrect() {
-        int n = 0;
-
-        for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest question : aspect.getQuestions()) {
-            boolean result = true;
-
-            if (question.getCodeQuestion().equals("OPC_SIM")) {
-                for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest alternative : question.getAlternatives()) {
-                    if (alternative.isSelected()) {
-                        result = result && "RPTA_COR".equals(alternative.getCodeAlternative());
-                    }
-                }
-            } else {
-                for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest alternative : question.getAlternatives()) {
-                    if (alternative.isSelected()) {
-                        result = result && "RPTA_COR".equals(alternative.getCodeAlternative());
-                    } else {
-                        if ("RPTA_COR".equals(alternative.getCodeAlternative())) {
-                            result = false;
-                        }
-                    }
-                }
-            }
-
-            if (result)
-                n++;
-
-        }
-        return n;
-    }
 
     @OnClick(R.id.tvNext)
     public void onNextClicked() {
@@ -181,67 +151,11 @@ public class ScoreActivity extends AppCompatActivity {
             filterQuestion.clear();
 
             if ("Malas".equals(((PieEntry) e).getLabel())) {
-
-                for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest question : aspect.getQuestions()) {
-
-                    EvaluationActiveRequest.EvaluationRequest.QuestionRequest newQuestion = new EvaluationActiveRequest.EvaluationRequest.QuestionRequest(0, 0, question.getQuestion(), question.getCodeQuestion(), new ArrayList<EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest>());
-                    List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest> newAlternative = new ArrayList<>();
-
-                    boolean shouldInsert = false;
-
-                    for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest alternative : question.getAlternatives()) {
-
-                        if (question.getCodeQuestion().equals("OPC_SIM")) {
-                            if (alternative.isSelected() && !"RPTA_COR".equals(alternative.getCodeAlternative())) {
-                                EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest alternative2 = new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(0, alternative.getDescription(), alternative.getCodeAlternative());
-                                alternative2.setSelected(alternative.isSelected());
-                                newAlternative.add(alternative2);
-                                shouldInsert = true;
-                            }
-                        }else{
-                            if (alternative.isSelected() || "RPTA_COR".equals(alternative.getCodeAlternative())) {
-                                EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest alternative2 = new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(0, alternative.getDescription(), alternative.getCodeAlternative());
-                                alternative2.setSelected(alternative.isSelected());
-                                newAlternative.add(alternative2);
-                                shouldInsert = true;
-                            }
-                        }
-                    }
-
-                    if (shouldInsert) {
-                        newQuestion.setAlternatives(newAlternative);
-                        filterQuestion.add(newQuestion);
-                    }
-                }
+                filterQuestion.addAll(badResult);
             }
 
             if ("Buenas".equals(((PieEntry) e).getLabel())) {
-
-                for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest question : aspect.getQuestions()) {
-
-                    EvaluationActiveRequest.EvaluationRequest.QuestionRequest newQuestion = new EvaluationActiveRequest.EvaluationRequest.QuestionRequest(0, 0, question.getQuestion(), question.getCodeQuestion(), new ArrayList<EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest>());
-                    List<EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest> newAlternative = new ArrayList<>();
-
-                    boolean shoulInsert = false;
-                    for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest alternative : question.getAlternatives()) {
-
-                        if ((alternative.isSelected() && "RPTA_COR".equals(alternative.getCodeAlternative()))) {
-                            EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest alternative2 = new EvaluationActiveRequest.EvaluationRequest.QuestionRequest.AlternativeRequest(0, alternative.getDescription(), alternative.getCodeAlternative());
-                            alternative2.setSelected(alternative.isSelected());
-                            newAlternative.add(alternative2);
-                            shoulInsert = true;
-                        }
-
-                        if (!alternative.isSelected() && "RPTA_COR".equals(alternative.getCodeAlternative())) {
-                            shoulInsert = false;
-                        }
-                    }
-                    if (shoulInsert) {
-                        filterQuestion.add(newQuestion);
-                        newQuestion.setAlternatives(newAlternative);
-                    }
-
-                }
+                filterQuestion.addAll(goodResult);
             }
 
             for (EvaluationActiveRequest.EvaluationRequest.QuestionRequest question2 : filterQuestion) {
@@ -331,8 +245,6 @@ public class ScoreActivity extends AppCompatActivity {
                     imageView.setImageDrawable(getResources().getDrawable(R.drawable.incorrect));
                 }
             }
-
-
         }
 
         class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -350,8 +262,6 @@ public class ScoreActivity extends AppCompatActivity {
 
             public void bind(String title) {
                 tvTitle.setText(title);
-
-                //flBackground.setBackgroundColor(mContext.getResources().getColor(R.color.color_invitation_pair));
             }
         }
     }

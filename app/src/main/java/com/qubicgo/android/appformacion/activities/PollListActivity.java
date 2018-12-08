@@ -198,7 +198,9 @@ public class PollListActivity extends AppCompatActivity {
                         Call<PollResponse> response = pollService.obtenerRepuestaEncuestas(
                                 mContext.getSharedPreferences("formacionbbva", MODE_PRIVATE).getString("AppJunction",""),
                                 groupPersonId,
-                                aspect.getScheduleId(),json);
+                                aspect.getScheduleId(),
+                                aspect.getTeacherId(),
+                                json);
 
                         response.enqueue(new Callback<PollResponse>() {
                             @Override
